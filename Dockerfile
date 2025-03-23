@@ -1,30 +1,29 @@
-# Definindo a imagem base
-FROM openjdk:21-jdk-slim AS build
+# Etapa de Build
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 
-# Configuração do Java 21
-ENV JAVA_HOME=/usr/local/openjdk-21
-ENV PATH=$JAVA_HOME/bin:$PATH
-
-# Definindo o diretório de trabalho no contêiner
+# Define o diretório de trabalho dentro do contêiner
 WORKDIR /app
 
-# Copiando os arquivos do projeto para o contêiner
-COPY curso .
+# Copia os arquivos do projeto para o contêiner
+COPY . .
 
-# Compilando o projeto com Maven
-RUN ./mvnw clean install -DskipTests
+# Dá permissão de execução ao wrapper do Maven
+RUN chmod +x mvnw
 
-# Imagem para rodar a aplicação
-FROM openjdk:21-jdk-slim
+# Compila o projeto e gera o JAR
+RUN ./mvnw clean package -DskipTests
 
-# Definindo o diretório de trabalho para a aplicação
+# Etapa de Execução
+FROM eclipse-temurin:21-jdk
+
+# Define o diretório de trabalho dentro do contêiner
 WORKDIR /app
 
-# Copiando o JAR gerado do contêiner de build para o contêiner de execução
-COPY --from=build /app/target/curso-0.0.1-SNAPSHOT.jar /app/curso.jar
+# Copia o JAR gerado da etapa de build para a imagem final
+COPY --from=build /app/target/*.jar app.jar
 
-# Expondo a porta que a aplicação vai rodar
+# Expõe a porta 8080
 EXPOSE 8080
 
-# Comando para rodar a aplicação
-CMD ["java", "-jar", "curso.jar"]
+# Define o comando de entrada
+ENTRYPOINT ["java", "-jar", "app.jar"]
