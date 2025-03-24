@@ -69,7 +69,6 @@ INSERT INTO tb_product_category (product_id, category_id) VALUES (10, 3);  -- M√
 INSERT INTO tb_order (moment, order_status, client_id) VALUES
                                                            ('2025-03-23T15:00:00Z', 0, 1), -- Pedido de Maria
                                                            ('2025-03-23T16:00:00Z', 1, 2); -- Pedido de Jo√£o
-
 -- Criar Pedido (Order)
 
 -- Pedido 1 para Carlos Almeida

@@ -1,6 +1,8 @@
 package com.estudando.curso.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -15,6 +17,7 @@ import java.util.Objects;
 @Entity
 
 @Table(name = "tb_user")
+@JsonIgnoreProperties({"orders"})
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     
@@ -40,7 +43,8 @@ public class User implements Serializable {
     )
     private String password;
 
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Order> orders = new ArrayList<>();
 
     public User() {

@@ -1,5 +1,6 @@
 package com.estudando.curso.resource;
 
+import com.estudando.curso.dto.UserDTO;
 import com.estudando.curso.entities.User;
 import com.estudando.curso.services.UserServices;
 import jakarta.validation.Valid;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -19,17 +21,16 @@ public class UserResources {
 
 
     @GetMapping
-    public ResponseEntity<List<User>> findAll () {
-
+    public ResponseEntity<List<UserDTO>> findAll() {
         List<User> list = service.findAll();
-        return ResponseEntity.ok().body(list);
+        List<UserDTO> dtoList = list.stream().map(UserDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(dtoList);
     }
 
-
     @GetMapping(value = "/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id) {
-        User obj = service.findById(id);
-        return ResponseEntity.ok().body(obj);
+    public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
+        User user = service.findById(id);
+        return ResponseEntity.ok().body(new UserDTO(user));
     }
 
     @PostMapping

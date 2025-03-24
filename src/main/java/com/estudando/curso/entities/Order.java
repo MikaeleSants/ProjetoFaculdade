@@ -1,6 +1,7 @@
 package com.estudando.curso.entities;
 
 import com.estudando.curso.entities.enums.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
